@@ -47,3 +47,10 @@ jobs:
         with:
           name: selenium-test-results
           path: test-results/
+
+      - name: Upload Test Logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: selenium-test-logs
+          path: test-results/test_log.txt
