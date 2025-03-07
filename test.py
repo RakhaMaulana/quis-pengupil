@@ -38,7 +38,6 @@ def wait_for_server(url, timeout=30):
 BASE_URL = "http://127.0.0.1:8000/"
 wait_for_server(BASE_URL)
 
-
 # Set up WebDriver
 chrome_options = webdriver.ChromeOptions()
 chrome_options.binary_location = "/usr/bin/google-chrome"
@@ -48,6 +47,9 @@ chrome_options.add_argument("--disable-dev-shm-usage")
 
 driver = webdriver.Chrome(options=chrome_options)
 driver.implicitly_wait(10)
+
+# List untuk menyimpan hasil test
+test_results = []
 
 def log_result(test_name, status, message=""):
     result = f"{test_name}: {status} - {message}"
