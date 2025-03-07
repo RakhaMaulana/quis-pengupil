@@ -16,7 +16,7 @@ chrome_options.add_argument("--disable-gpu")  # Tidak perlu GPU di server CI/CD
 driver = webdriver.Chrome(options=chrome_options)
 
 # Base URL untuk sistem yang diuji
-BASE_URL = "http://localhost/quiz-pengupil/"
+BASE_URL = "http://127.0.0.1:8000/"
 
 # List untuk menyimpan hasil test
 test_results = []
