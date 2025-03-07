@@ -29,16 +29,32 @@ jobs:
         sudo apt update
         sudo apt install -y google-chrome-stable
 
-    - name: Install Chrome WebDriver
-      run: |
-        CHROME_VERSION=$(google-chrome --version | awk '{print $3}' | cut -d '.' -f 1)
-        wget -q https://chromedriver.storage.googleapis.com/LATEST_RELEASE_$CHROME_VERSION -O latest_version
-        LATEST_DRIVER_VERSION=$(cat latest_version)
-        wget -q https://chromedriver.storage.googleapis.com/$LATEST_DRIVER_VERSION/chromedriver_linux64.zip
-        unzip chromedriver_linux64.zip
-        sudo mv chromedriver /usr/bin/chromedriver
-        sudo chmod +x /usr/bin/chromedriver
-        chromedriver --version
+        - name: Install Google Chrome & WebDriver
+        run: |
+          # Install Google Chrome
+          wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
+          echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" | sudo tee /etc/apt/sources.list.d/google-chrome.list
+          sudo apt update
+          sudo apt install -y google-chrome-stable
+
+          # Ambil versi Chrome yang terinstall
+          CHROME_VERSION=$(google-chrome --version | awk '{print $3}' | cut -d '.' -f 1)
+
+          # Cek apakah versi ChromeDriver tersedia
+          if wget -q --spider https://chromedriver.storage.googleapis.com/LATEST_RELEASE_$CHROME_VERSION; then
+            wget -q https://chromedriver.storage.googleapis.com/LATEST_RELEASE_$CHROME_VERSION -O latest_version
+            LATEST_DRIVER_VERSION=$(cat latest_version)
+            wget -q https://chromedriver.storage.googleapis.com/$LATEST_DRIVER_VERSION/chromedriver_linux64.zip
+            unzip chromedriver_linux64.zip
+            sudo mv chromedriver /usr/bin/chromedriver
+            sudo chmod +x /usr/bin/chromedriver
+            echo "✅ ChromeDriver Installed:"
+            chromedriver --version
+          else
+            echo "❌ No matching ChromeDriver found for Chrome $CHROME_VERSION"
+            exit 1
+          fi
+
 
     - name: Start MariaDB Service
       run: |
