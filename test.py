@@ -1,11 +1,19 @@
 from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import time
 
-# Set up WebDriver
-driver = webdriver.Chrome()
+# Konfigurasi Chrome WebDriver untuk CI/CD di GitHub Actions
+chrome_options = webdriver.ChromeOptions()
+chrome_options.add_argument("--headless")  # Mode headless (tanpa UI)
+chrome_options.add_argument("--no-sandbox")  # Dibutuhkan agar berjalan di GitHub Actions
+chrome_options.add_argument("--disable-dev-shm-usage")  # Mencegah masalah shared memory di Linux
+chrome_options.add_argument("--disable-gpu")  # Tidak perlu GPU di server CI/CD
+
+# Set up WebDriver dengan konfigurasi yang sudah diperbaiki
+driver = webdriver.Chrome(options=chrome_options)
 
 # Base URL untuk sistem yang diuji
 BASE_URL = "http://localhost/quiz-pengupil/"

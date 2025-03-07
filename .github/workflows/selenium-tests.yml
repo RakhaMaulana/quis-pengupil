@@ -24,10 +24,12 @@ jobs:
       - name: Install Dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt
+          pip install selenium webdriver-manager pytest
 
       - name: Start Selenium WebDriver (Chrome)
-        uses: nanasess/setup-chromedriver@v2
+        run: |
+          sudo apt update
+          sudo apt install -y google-chrome-stable
 
       - name: Run Selenium Tests
         run: python test.py
