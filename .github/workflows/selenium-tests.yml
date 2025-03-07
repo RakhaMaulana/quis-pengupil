@@ -19,18 +19,21 @@ jobs:
     - name: Install dependencies
       run: |
         sudo apt update
-        sudo apt install -y php php-cli php-mysql unzip google-chrome-stable
+        sudo apt install -y php php-cli php-mysql unzip google-chrome-stable mariadb-server
 
-    - name: Start MySQL service
+    - name: Start MariaDB Service
       run: |
-        sudo systemctl start mysql
-        sudo systemctl restart mysql  # Restart untuk memastikan perubahan diterapkan
+        sudo systemctl start mariadb
+        sudo systemctl enable mariadb
+        sudo systemctl restart mariadb  # Restart untuk memastikan perubahan diterapkan
 
-    - name: Configure MySQL and Setup Database
+    - name: Setup Database
       run: |
         sudo mysql --user=root --execute="CREATE DATABASE IF NOT EXISTS quiz_pengupil;"
+        sudo mysql --user=root quiz_pengupil < db/quiz_pengupil.sql
         sudo mysql --user=root --execute="GRANT ALL PRIVILEGES ON quiz_pengupil.* TO 'root'@'localhost' IDENTIFIED BY '';"
         sudo mysql --user=root --execute="FLUSH PRIVILEGES;"
+
 
     - name: Start PHP server
       run: |
