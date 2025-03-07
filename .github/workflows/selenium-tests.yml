@@ -19,7 +19,7 @@ jobs:
     - name: Install dependencies
       run: |
         sudo apt update
-        sudo apt install -y php php-cli php-mysql unzip google-chrome-stable mariadb-server
+        sudo apt install -y php php-cli php-mysql unzip google-chrome-stable mariadb-server mariadb-client
 
     - name: Start MariaDB Service
       run: |
@@ -34,16 +34,21 @@ jobs:
         sudo mysql --user=root --execute="GRANT ALL PRIVILEGES ON quiz_pengupil.* TO 'root'@'localhost' IDENTIFIED BY '';"
         sudo mysql --user=root --execute="FLUSH PRIVILEGES;"
 
+    - name: Verify Database Setup
+      run: |
+        sudo mysql -u root -e "USE quiz_pengupil; SHOW TABLES;"
 
     - name: Start PHP server
       run: |
-        php -S 127.0.0.1:8000 -t . > server.log 2>&1 &
+        nohup php -S 127.0.0.1:8000 -t . > server.log 2>&1 &
+        sleep 5
+        cat server.log
 
     - name: Wait for server to start
       run: |
         for i in {1..10}; do
-          curl -s http://127.0.0.1:8000/ && break
-          echo "Waiting for server..."
+          curl -s http://127.0.0.1:8000/ && echo "✅ Server is up!" && break
+          echo "⏳ Waiting for server..."
           sleep 2
         done
 
@@ -60,7 +65,7 @@ jobs:
     - name: Install Chrome WebDriver
       run: |
         sudo apt install -y chromium-chromedriver
-        echo "Chrome WebDriver installed."
+        echo "✅ Chrome WebDriver installed."
 
     - name: Run Selenium Tests
       run: python test.py
