@@ -23,23 +23,7 @@ jobs:
     - name: Install dependencies
       run: |
         sudo apt update
-        sudo apt install -y php php-cli php-mysql unzip mariadb-server mariadb-client curl wget
-        wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
-        sudo sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list'
-        sudo apt update
-        sudo apt install -y google-chrome-stable
-
-    - name: Install Chrome WebDriver
-      run: |
-        CHROME_VERSION=$(google-chrome --version | awk '{print $3}' | cut -d '.' -f 1)
-        wget -q https://chromedriver.storage.googleapis.com/LATEST_RELEASE_$CHROME_VERSION -O latest_version
-        LATEST_DRIVER_VERSION=$(cat latest_version)
-        wget -q https://chromedriver.storage.googleapis.com/$LATEST_DRIVER_VERSION/chromedriver_linux64.zip
-        unzip chromedriver_linux64.zip
-        sudo mv chromedriver /usr/bin/chromedriver
-        sudo chmod +x /usr/bin/chromedriver
-        chromedriver --version
-
+        sudo apt install -y php php-cli php-mysql unzip google-chrome-stable mariadb-server mariadb-client curl
 
     - name: Start MariaDB Service
       run: |
@@ -83,7 +67,7 @@ jobs:
     - name: Install Python Dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install selenium webdriver-manager pytest
+        pip install selenium webdriver-manager pytest chromedriver-autoinstaller
 
     - name: Run Selenium Tests
       run: python test.py

@@ -2,11 +2,11 @@ import os
 import logging
 import requests
 import time
+import chromedriver_autoinstaller
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-import chromedriver_autoinstaller
 
 # Install ChromeDriver yang sesuai dengan versi Google Chrome
 chromedriver_autoinstaller.install()
@@ -37,6 +37,7 @@ def wait_for_server(url, timeout=30):
 # Cek server sebelum Selenium berjalan
 BASE_URL = "http://127.0.0.1:8000/"
 wait_for_server(BASE_URL)
+
 
 # Set up WebDriver
 chrome_options = webdriver.ChromeOptions()
