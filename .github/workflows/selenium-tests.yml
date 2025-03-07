@@ -19,13 +19,13 @@ jobs:
     - name: Install dependencies
       run: |
         sudo apt update
-        sudo apt install -y php php-cli php-mysql unzip google-chrome-stable mariadb-server mariadb-client
+        sudo apt install -y php php-cli php-mysql unzip google-chrome-stable mariadb-server mariadb-client curl
 
     - name: Start MariaDB Service
       run: |
         sudo systemctl start mariadb
         sudo systemctl enable mariadb
-        sudo systemctl restart mariadb  # Restart untuk memastikan perubahan diterapkan
+        sudo systemctl restart mariadb
 
     - name: Setup Database
       run: |
@@ -42,15 +42,18 @@ jobs:
       run: |
         nohup php -S 127.0.0.1:8000 -t . > server.log 2>&1 &
         sleep 5
+        echo "✅ Checking server log:"
         cat server.log
 
     - name: Wait for server to start
       run: |
         for i in {1..10}; do
-          curl -s http://127.0.0.1:8000/ && echo "✅ Server is up!" && break
+          curl -s http://127.0.0.1:8000/ && echo "✅ Server is up!" && exit 0
           echo "⏳ Waiting for server..."
           sleep 2
         done
+        echo "❌ Server failed to start!"
+        exit 1
 
     - name: Set Up Python
       uses: actions/setup-python@v5
