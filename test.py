@@ -31,18 +31,18 @@ def wait_for_server(url, timeout=30):
     raise RuntimeError("❌ Server failed to start!")
 
 # Cek server sebelum Selenium berjalan
-BASE_URL = "http://127.0.0.1:8000/login.php"
+BASE_URL = "http://127.0.0.1:8000/"
 wait_for_server(BASE_URL)
 
 # Set up WebDriver
 chrome_options = webdriver.ChromeOptions()
+chrome_options.binary_location = "/usr/bin/google-chrome"
 chrome_options.add_argument("--headless")
 chrome_options.add_argument("--no-sandbox")
 chrome_options.add_argument("--disable-dev-shm-usage")
-driver = webdriver.Chrome(options=chrome_options)
 
-# List untuk menyimpan hasil test
-test_results = []
+driver = webdriver.Chrome(options=chrome_options)
+driver.implicitly_wait(10)
 
 def log_result(test_name, status, message=""):
     result = f"{test_name}: {status} - {message}"
